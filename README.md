@@ -1,58 +1,75 @@
 # Project Name
-This case study aims to give an idea of applying EDA in a real business scenario. In this case study, we will apply the EDA techniques towards developing a basic understanding of risk analytics in financial services and understand how data is used to minimise the risk of defaulting customers when financial institues lend money.
 
-This case study aims to identify patterns which indicate if a client has difficulty paying their installments which may be used for taking actions such as denying the loan, reducing the amount of loan, lending (to risky applicants) at a higher interest rate, etc.
+Problem Statement:
+A bike-sharing system is a service in which bikes are made available for shared use to individuals on a short term basis for a price or free. Many bike share systems allow people to borrow a bike from a "dock" which is usually computer-controlled wherein the user enters the payment information, and the system unlocks it. This bike can then be returned to another dock belonging to the same system.
 
-This will ensure that the consumers capable of repaying the loan are not rejected. Identification of such applicants using EDA is the aim of this case study.
+The objective of this case study is to identify which variables are significant in predicting the demand for shared bikes.
+
+Business Goal:
+We have to model the demand for shared bikes with the available independent variables. It will be used to understand how exactly the demands vary with different features.
 
 
 ## Table of Contents
-* [General Info](#general-information)
-* [Data Cleaning and Outlier Management](#DC-OM)
-* [Analysis of Univariate and Bivariate](#conclusions)
-* [Acknowledgements](#acknowledgements)
+* [General Info]
+* [Data Visualization]
+* [Model Building]
+* [Model validation]
+* [Conclusion]
+* [Acknowledgements]
 
 
 ## General Info
-- Raw data provided contains data of individuals and their respective loans data
-- Data contains 111 Columns and 39717 Rows
-- We need to analyse this data and derive data that could help identify patterns which indicate if a client has difficulty paying their installments. 
+- Raw data provided contains data of biking
+- Data contains 16 Columns and 730 Rows
+- We need to analyse this data and derive linear regression model 
 
 
-## Data Cleaning and Outlier Management
-- annual_inc - Column had multiple outlier. So outlier have been treated and replaced with percentile based employment length
-- int_rate - Removed % from the text, replaced blanks with 0 and changed data type to float64
-- emp_length - 
-	1. Replace < 1 year and NA by 0 
-   	2. 10 + Years = 10 
-   	3. Remaining (Example: 5 Years)  - Remove years (Example: 5). 
-   	4. Convert to int64
-- term - remove "months" convert to int64
-- For 70 columns with more than or equal to 95% missing data or all rows containing same data are dropped
+## Data Visualization
+1. Count is high in Year (Yr) 1 which is 2019. 
+2. Temp and aTemp - Resemble a linear line for cnt.
+3. Casual + Registered = Cnt so we will consider Cnt in our model. so drop Casual and Registered. 
+4. temp and atemp follow similar distribution. So we will use Actual Temperature (atemp).
+5. There is some linearity seen above between other variables and cnt so a linear regression model can be used
+6. atemp and temp are highly correlated with cnt
+7. casual and registered are highly correlated with cnt which is expected since casual + registered = cnt
+
+Categorical variable observations are given below:
+1. Significant increase in cnt of bikers where weather is 1 (Clear, Few clouds, Partly cloudy, Partly cloudy)
+2. Mean cnt of bikers is not significantly different during Working days or Weekdays
+3. Cnt of bikers is highest during the months of 7, 8, 9 and 10th months (July – October).
+4. In 2019 there is significant increase in the number of bikers (Cnt is significantly higher)
+5. Season 3(Fall) the average bikers count(cnt) is significantly higher than other seasons
 
 
-## Analysis Approaches
-- Univariate Analysis:
-- Observations
-- 1. For Short Term tenure, among charged off members, higher number of charged off is when the loan amount is between 500-8000.
-- 2. 30k-50k is the peak income of charged off members while 50k-60k is the peak income of fully paid members. 
-- Bi/Multi Variate Analysis:
-- Observations
-- 3. The loan amount taken by Charged off members between 25-75 percentile range is slightly higher than the loan amount taken by Fully paid members.  
-- 4. There is a clear outlier that members with purpose as "Credit Card" and "Debt consolidation" are at higher risk of loan defaulting
-- 5. It can be observed from percentages of defaulters that members with purpose as "Small Business" are at higher risk of loan defaulting
-- 6. Members from state of CA, FL, NY have higher count of defaulters. 
-- 7. From a percentages perspective the states (NE ( although count is low), NV, SD and FL) have higher defaulters and thus risk states to grant loans to members.
-## Dervied Metrics
-- Total Count for every purpose and region
-## Driver Variables
-- Following are driver variables observed from analysis: 
-- 1. Annual Income - default rate is increasing with lower salary ranges
-- 2. Region - NE, NV, Ak, SD have higher default rate (NE - no of people from NE is also low, therefore, NE can be skipped for now)
-- 3. Term - default rate for loan amount ranging from 500 to 2000 is higher for 36 months tenure
-- 4. Loan Amount - default rate for loan amount ranging from 500 to 2000 is higher for 36 months tenure
-- 5. Employee Length - Annual Income outliers are treated using emp_length
--
+## Model Building
+- Columns instant,dteday,temp,casual,registered were dropped. 
+- Dummy variables were assigned to columns to allow better performance of model. 
+- Train and test dataset was split into 70:30 ratio.
+- Final model considered was using the below 12 attributes only.  
+ -1 yr
+ -2 atemp
+ -3 windspeed
+ -4 season_Spring
+ -5 season_Winter
+ -6 mnth_January
+ -7 mnth_July
+ -8 mnth_September
+ -9 weekday_Saturday
+ -10 weekday_Sunday
+ -11 weathersit_Light Precipitation
+ -12 weathersit_Mist + Cloudy
+
+## Model validation
+- Residual districution was normal
+- There is no multicolinearity. This is reduced. 
+- VIF of all independent variables is <5
+- P Value of independent variables <0.05
+
+## Conclusion
+- R-squared is 83.3% on train set and 80.6% on test set
+- Adjusted R-squared is 82.9% on train set and 79.7% on test set
+
+
 ## Technologies Used
 - Jupyter Notebook 6.5.2
 - GitHub 
